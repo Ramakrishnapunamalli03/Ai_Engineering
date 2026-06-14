@@ -1,0 +1,56 @@
+# ─── Secrets (NEVER commit these) ───
+.env
+.env.local
+.env.production
+.env.*.local
+
+# ─── Python ───
+.venv/
+__pycache__/
+*.pyc
+
+# ─── AI Artifacts ───
+models/
+data/raw/
+*.pt
+*.bin
+
+
+# ─── Secrets ───
+.env
+.env.*
+!.env.example
+
+# ─── Python ───
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# ─── AI / ML Artifacts ───
+*.pt
+*.pth
+*.onnx
+*.bin
+*.safetensors
+*.gguf
+models/
+data/raw/
+data/processed/
+*.parquet
+*.h5
+
+# ─── Notebooks ───
+.ipynb_checkpoints/
+
+# ─── IDE ───
+.vscode/settings.json
+.idea/
+*.swp
+.DS_Store
+
+# ─── Docker ───
+docker-compose.override.yml
