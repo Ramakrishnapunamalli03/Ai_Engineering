@@ -1,0 +1,39 @@
+<!-- Save this as index.html, open in browser, and test -->
+<!DOCTYPE html>
+<html>
+<body>
+  <input id="input" placeholder="Ask anything..." style="width:300px" />
+  <button onclick="send()">Send</button>
+  <div id="output" style="white-space:pre-wrap; margin-top:10px;"></div>
+
+  <script>
+    async function send() {
+      const input = document.getElementById('input').value;
+      const output = document.getElementById('output');
+      output.textContent = '';
+
+      const response = await fetch('http://localhost:8000/chat/stream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: input }),
+      });
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const text = decoder.decode(value);
+        const lines = text.split('\n').filter(l => l.startsWith('data: '));
+        for (const line of lines) {
+          const content = line.slice(6);
+          if (content !== '[DONE]') {
+            output.textContent += content;
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>
