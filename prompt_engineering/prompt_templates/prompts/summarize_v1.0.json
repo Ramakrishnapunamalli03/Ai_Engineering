@@ -1,0 +1,7 @@
+{
+  "name": "summarize",
+  "version": "1.0",
+  "template": "Summarize in {{style}}: {{text}}",
+  "created_at": "2026-06-19T18:44:49.494017",
+  "metadata": {}
+}

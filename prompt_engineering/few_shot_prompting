@@ -1,0 +1,51 @@
+"""
+Few-shot ticket classifier — classifies support tickets into categories.
+Copy this and run it. Replace the last user message with any real ticket.
+Run: python few_shot_classifier.py
+"""
+import json
+from openai import OpenAI
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+client = OpenAI(
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1"
+)
+def classify_ticket(ticket_text: str) -> dict:
+    """Classify a support ticket using few-shot examples."""
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {"role": "system", "content": "You classify customer support tickets. Respond with JSON only."},
+            
+            # Example 1: Shipping issue
+            {"role": "user", "content": "My order #4521 hasn't arrived and it's been 2 weeks. This is unacceptable."},
+            {"role": "assistant", "content": '{"category": "shipping", "priority": "high", "sentiment": "frustrated", "confidence": 0.95}'},
+            
+            # Example 2: Simple question
+            {"role": "user", "content": "How do I update my billing address?"},
+            {"role": "assistant", "content": '{"category": "account", "priority": "low", "sentiment": "neutral", "confidence": 0.98}'},
+            
+            # Example 3: Positive feedback
+            {"role": "user", "content": "Just wanted to say your product is amazing! Saved me hours of work."},
+            {"role": "assistant", "content": '{"category": "feedback", "priority": "low", "sentiment": "positive", "confidence": 0.99}'},
+            
+            # Example 4: Edge case — ambiguous
+            {"role": "user", "content": "I think there might be a bug? The export button doesn't seem to work sometimes."},
+            {"role": "assistant", "content": '{"category": "bug_report", "priority": "medium", "sentiment": "uncertain", "confidence": 0.75}'},
+            
+            # Actual ticket to classify
+            {"role": "user", "content": ticket_text},
+        ],
+        temperature=0.0,  # Deterministic for classification
+    )
+    return json.loads(response.choices[0].message.content)
+
+# Test it
+result = classify_ticket("I was charged twice for my subscription last month")
+print(json.dumps(result, indent=2))
+# Expected: {"category": "billing", "priority": "high", "sentiment": "frustrated", "confidence": 0.92}
