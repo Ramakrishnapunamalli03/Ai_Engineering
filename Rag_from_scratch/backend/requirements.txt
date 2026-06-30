@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+openai
+chromadb
+rank-bm25
+python-dotenv
+cohere  # optional — only used if COHERE_API_KEY is set

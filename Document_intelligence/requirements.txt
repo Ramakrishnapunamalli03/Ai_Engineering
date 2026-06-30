@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+openai
+pdfplumber
+pypdf
+pytesseract
+pdf2image
+python-dotenv
